@@ -9,7 +9,7 @@ var FONT_GAP = 20;
 var SPACE_BETWEEN = 40;
 
 var BAR_WIDTH = 50;
-var barHeight = 150;
+var BAR_HEIGHT = 150;
 
 
 var renderCloud = function (ctx, x, y, color) {
@@ -18,8 +18,8 @@ var renderCloud = function (ctx, x, y, color) {
 };
 
 var getMaxElement = function (arr) {
+  var maxElement = arr[0];
   if (arr.length) {
-    var maxElement = arr[0];
     for (var i = 1; i < arr.length; i++) {
       if (arr[i] > maxElement) {
         maxElement = arr[i];
@@ -28,6 +28,20 @@ var getMaxElement = function (arr) {
   }
   return maxElement;
 };
+
+var getBarColor = function (ctx, barName) {
+  ctx.fillStyle = barName === 'Вы' ? 'rgba(255, 0, 0, 1)' : 'hsl(' + 240 + ',' + Math.floor(100 * (Math.random())) + '%,' + 50 + '%)';
+};
+
+var renderBars = function (ctx, barNames, barTimes, maxBarTime) {
+  for (var i = 0; i < barNames.length; i++) {
+    ctx.fillStyle = '#000';
+    ctx.fillText(barNames[i], CLOUD_X + BAR_WIDTH + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - GAP - FONT_GAP);
+    ctx.fillText(Math.floor(barTimes[i]), BAR_WIDTH + CLOUD_X + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - 2 * GAP - 2 * FONT_GAP + (BAR_HEIGHT - (BAR_HEIGHT * barTimes[i])) / maxBarTime);
+    getBarColor(ctx, barNames[i]);
+    ctx.fillRect(BAR_WIDTH + CLOUD_X + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - 2 * GAP - FONT_GAP, BAR_WIDTH, (BAR_HEIGHT - (BAR_HEIGHT * barTimes[i])) / maxBarTime);
+  }
+}
 
 window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
@@ -41,13 +55,6 @@ window.renderStatistics = function (ctx, names, times) {
 
   var maxTime = getMaxElement(times);
 
-  for (var i = 0; i < names.length; i++) {
-    ctx.fillStyle = '#000';
-    ctx.fillText(names[i], CLOUD_X + BAR_WIDTH + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - GAP - FONT_GAP);
-    ctx.fillText(Math.floor(times[i]), BAR_WIDTH + CLOUD_X + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - 2 * GAP - 2 * FONT_GAP + (barHeight - (barHeight * times[i])) / maxTime);
-    ctx.fillStyle = names[i] === 'Вы' ? 'rgba(255, 0, 0, 1)' : 'hsl(' + 240 + ',' + Math.floor(100 * (Math.random())) + '%,' + 50 + '%)';
-    ctx.fillRect(BAR_WIDTH + CLOUD_X + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - 2 * GAP - FONT_GAP, BAR_WIDTH, (barHeight - (barHeight * times[i])) / maxTime);
-
-  }
+  renderBars(ctx, names, times, maxTime);
 };
 
