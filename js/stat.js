@@ -41,7 +41,7 @@ var renderBars = function (ctx, barNames, barTimes, maxBarTime) {
     getBarColor(ctx, barNames[i]);
     ctx.fillRect(BAR_WIDTH + CLOUD_X + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - 2 * GAP - FONT_GAP, BAR_WIDTH, (BAR_HEIGHT - (BAR_HEIGHT * barTimes[i])) / maxBarTime);
   }
-}
+};
 
 window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
