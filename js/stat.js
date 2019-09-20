@@ -43,18 +43,21 @@ var renderBars = function (ctx, barNames, barTimes, maxBarTime) {
   }
 };
 
+var renderText = function (ctx, text, color, font, baseline, x, y) {
+  ctx.fillStyle = color;
+  ctx.font = font;
+  ctx.textBaseline = baseline;
+  ctx.fillText(text, x, y);
+};
+
 window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
 
-  ctx.fillStyle = '#000';
-  ctx.font = '16pt PT Mono';
-  ctx.textBaseline = 'hanging';
-  ctx.fillText('Ура вы победили!', CLOUD_X + GAP, CLOUD_Y + FONT_GAP);
-  ctx.fillText('Список результатов:', CLOUD_X + GAP, CLOUD_Y + 2 * FONT_GAP);
+  renderText(ctx, 'Ура вы победили!', '#000', '16px PT Mono', 'hanging', CLOUD_X + GAP, CLOUD_Y + FONT_GAP);
+  renderText(ctx, 'Список результатов:', '#000', '16px PT Mono', 'hanging', CLOUD_X + GAP, CLOUD_Y + 2 * FONT_GAP);
 
   var maxTime = getMaxElement(times);
-
   renderBars(ctx, names, times, maxTime);
 };
 
