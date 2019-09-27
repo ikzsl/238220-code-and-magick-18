@@ -34,12 +34,13 @@ var getBarColor = function (ctx, barName) {
 };
 
 var renderBars = function (ctx, barNames, barTimes) {
+  var maxBarTime = getMaxElement(barTimes);
   for (var i = 0; i < barNames.length; i++) {
     ctx.fillStyle = '#000';
     ctx.fillText(barNames[i], CLOUD_X + BAR_WIDTH + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - GAP - FONT_GAP);
-    ctx.fillText(Math.floor(barTimes[i]), BAR_WIDTH + CLOUD_X + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - 2 * GAP - 2 * FONT_GAP + (BAR_HEIGHT - (BAR_HEIGHT * barTimes[i])) / getMaxElement(barTimes));
+    ctx.fillText(Math.floor(barTimes[i]), BAR_WIDTH + CLOUD_X + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - 2 * GAP - 2 * FONT_GAP + (BAR_HEIGHT - (BAR_HEIGHT * barTimes[i])) / maxBarTime);
     getBarColor(ctx, barNames[i]);
-    ctx.fillRect(BAR_WIDTH + CLOUD_X + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - 2 * GAP - FONT_GAP, BAR_WIDTH, (BAR_HEIGHT - (BAR_HEIGHT * barTimes[i])) / getMaxElement(barTimes));
+    ctx.fillRect(BAR_WIDTH + CLOUD_X + (SPACE_BETWEEN + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - 2 * GAP - FONT_GAP, BAR_WIDTH, (BAR_HEIGHT - (BAR_HEIGHT * barTimes[i])) / maxBarTime);
   }
 };
 
