@@ -4,6 +4,9 @@ var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'К
 var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
+var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 var selectRandomElement = function (array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -31,11 +34,54 @@ var renderWizard = function (wizard) {
   return wizardElement;
 };
 
-var userDialog = document.querySelector('.setup');
-userDialog.classList.remove('hidden');
+
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var setupUserName = setup.querySelector('.setup-user-name');
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+var openPopup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var closePopup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+setupUserName.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onPopupEscPress);
+});
+
+setupUserName.addEventListener('blur', function () {
+  document.addEventListener('keydown', onPopupEscPress);
+});
+
+setupClose.addEventListener('click', closePopup);
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
+});
+
+setupOpen.addEventListener('click', openPopup);
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openPopup();
+  }
+});
+
 
 var similarListElement = document.querySelector('.setup-similar-list');
-
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
   .content
   .querySelector('.setup-similar-item');
@@ -47,6 +93,52 @@ for (var i = 0; i < wizards.length; i++) {
 }
 
 similarListElement.appendChild(fragment);
-userDialog.querySelector('.setup-similar').classList.remove('hidden');
+setup.querySelector('.setup-similar').classList.remove('hidden');
 
+var userNameInput = setup.querySelector('.setup-user-name');
+userNameInput.addEventListener('input', function (evt) {
+  var target = evt.target;
+  if (target.value.length < 2) {
+    target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+  } else {
+    target.setCustomValidity('');
+  }
+});
+
+var setupPlayer = document.querySelector('.setup-player');
+var wizardCoat = setupPlayer.querySelector('.wizard-coat');
+var wizardEyes = setupPlayer.querySelector('.wizard-eyes');
+var fireball = setupPlayer.querySelector('.setup-fireball-wrap');
+var coatColorInput = setupPlayer.querySelector('input[name=coat-color]');
+var eyesColorInput = setupPlayer.querySelector('input[name=eyes-color]');
+var fireballColorInput = fireball.querySelector('input[name=fireball-color]');
+
+var changeColor = function (array, currentColor) {
+  var randomColor = selectRandomElement(array);
+  while (randomColor === currentColor) {
+    randomColor = selectRandomElement(array);
+  }
+  return randomColor;
+};
+
+// Меняем цвет плаща
+wizardCoat.addEventListener('click', function () {
+  var randomCoatColor = changeColor(WIZARD_COAT_COLORS, coatColorInput.value);
+  wizardCoat.style.fill = randomCoatColor;
+  coatColorInput.value = randomCoatColor;
+});
+
+// Меняем цвет глаз
+wizardEyes.addEventListener('click', function () {
+  var randomEyesColor = changeColor(WIZARD_EYES_COLORS, eyesColorInput.value);
+  wizardEyes.style.fill = randomEyesColor;
+  eyesColorInput.value = randomEyesColor;
+});
+
+// Меняем цвет фаерболов
+fireball.addEventListener('click', function () {
+  var randomFireballColor = changeColor(FIREBALL_COLORS, fireballColorInput.value);
+  fireball.style.backgroundColor = randomFireballColor;
+  fireballColorInput.value = randomFireballColor;
+});
 
