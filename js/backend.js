@@ -1,16 +1,18 @@
 'use strict';
 
 (function () {
+  var TIMEOUT = 10000; // 10s
+  var statusCodeOK = 200;
 
+  var URL = 'https://js.dump.academy/code-and-magick/data';
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'json';
+  xhr.timeout = TIMEOUT;
 
   window.backend = {
     load: function (onLoad, onError) {
-      var URL = 'https://js.dump.academy/code-and-magick/data';
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === statusCodeOK) {
           onLoad(xhr.response);
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + XMLHttpRequest.statusText);
@@ -25,28 +27,21 @@
         onError('Запрос не успел выполнится за ' + xhr.timeout + 'мс');
       });
 
-      xhr.timeout = 10000; // 10s
       xhr.open('GET', URL);
       xhr.send();
     },
     save: function (data, onLoad, onError) {
-      var URL = 'https://js.dump.academy/code-and-magick';
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === statusCodeOK) {
           onLoad(xhr.response);
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + XMLHttpRequest.statusText);
         }
-
       });
 
       xhr.addEventListener('timeout', function () {
         onError('Запрос не успел выполнится за ' + xhr.timeout + 'мс');
       });
-      xhr.timeout = 10000; // 10s
       xhr.open('POST', URL);
       xhr.send(data);
     }
