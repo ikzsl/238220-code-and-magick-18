@@ -1,33 +1,9 @@
 'use strict';
 (function () {
-  var WIZARD_COAT_COLORS = [
-    'rgb(101, 137, 164)',
-    'rgb(241, 43, 107)',
-    'rgb(146, 100, 161)',
-    'rgb(56, 159, 117)',
-    'rgb(215, 210, 55)',
-    'rgb(0, 0, 0)'
-  ];
-  var WIZARD_EYES_COLORS = [
-    'black',
-    'red',
-    'blue',
-    'yellow',
-    'green'
-  ];
-  var FIREBALL_COLORS = [
-    '#ee4830',
-    '#30a8ee',
-    '#5ce6c0',
-    '#e848d5',
-    '#e6e848'
-  ];
-
-  var selectRandomElement = function (array) {
-    return array[Math.floor(Math.random() * array.length)];
-  };
 
   var wizards = [];
+  var coatColor;
+  var eyesColor;
 
   var getRank = function (wizard) {
     var rank = 0;
@@ -62,12 +38,20 @@
     }));
   };
 
+  window.wizard.onCoatChange = window.debounce(function (color) {
+    coatColor = color;
+    updateWizards();
+  });
+
+  window.wizard.onEyesChange = window.debounce(function (color) {
+    eyesColor = color;
+    updateWizards();
+  });
 
   var successHandler = function (data) {
     wizards = data;
     updateWizards();
   };
-
 
   var errorHandler = function (errorMessage) {
     var node = document.createElement('div');
@@ -90,48 +74,5 @@
       setup.classList.add('hidden');
     }, errorHandler);
     evt.preventDefault();
-  });
-
-  var changeValue = function (array, currentValue) {
-    var randomValue = selectRandomElement(array);
-    while (randomValue === currentValue) {
-      randomValue = selectRandomElement(array);
-    }
-    return randomValue;
-  };
-
-  var setupPlayer = document.querySelector('.setup-player');
-
-  // Меняем цвет плаща
-  var coatColor;
-  var wizardCoat = setupPlayer.querySelector('.wizard-coat');
-  var coatColorInput = setupPlayer.querySelector('input[name=coat-color]');
-  wizardCoat.addEventListener('click', function () {
-    var randomCoatColor = changeValue(WIZARD_COAT_COLORS, coatColorInput.value);
-    wizardCoat.style.fill = randomCoatColor;
-    coatColorInput.value = randomCoatColor;
-    coatColor = randomCoatColor;
-    updateWizards();
-  });
-
-  // Меняем цвет глаз
-  var eyesColor;
-  var wizardEyes = setupPlayer.querySelector('.wizard-eyes');
-  var eyesColorInput = setupPlayer.querySelector('input[name=eyes-color]');
-  wizardEyes.addEventListener('click', function () {
-    var randomEyesColor = changeValue(WIZARD_EYES_COLORS, eyesColorInput.value);
-    wizardEyes.style.fill = randomEyesColor;
-    eyesColorInput.value = randomEyesColor;
-    eyesColor = randomEyesColor;
-    updateWizards();
-  });
-
-  // Меняем цвет фаерболов
-  var fireball = setupPlayer.querySelector('.setup-fireball-wrap');
-  var fireballColorInput = fireball.querySelector('input[name=fireball-color]');
-  fireball.addEventListener('click', function () {
-    var randomFireballColor = changeValue(FIREBALL_COLORS, fireballColorInput.value);
-    fireball.style.backgroundColor = randomFireballColor;
-    fireballColorInput.value = randomFireballColor;
   });
 })();
