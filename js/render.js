@@ -2,6 +2,8 @@
 
 (function () {
 
+  var SIMILAR_WIZARDS_NUMBER = 4;
+
   var wizardTemplate = document.querySelector('#similar-wizard-template')
     .content
     .querySelector('.setup-similar-item');
@@ -21,7 +23,7 @@
 
   window.render = function (data) {
 
-    var takeNumber = data.length > 4 ? 4 : data.length;
+    var takeNumber = Math.min(data.length, SIMILAR_WIZARDS_NUMBER);
     similarListElement.innerHTML = '';
     var fragment = document.createDocumentFragment();
 
